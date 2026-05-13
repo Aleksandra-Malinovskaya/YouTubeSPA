@@ -6,6 +6,10 @@ import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
 import MyLogo from "../assets/sibdev-logo.svg";
 import { useNavigate } from "react-router";
+import { useDispatch } from "react-redux";
+import { resetAuthState } from "../RTK/authSlice";
+import { clearVideos } from "../RTK/videoSlice";
+import { change } from "../RTK/inputSlice";
 
 const pages = [
   { name: "Поиск", path: "/search" },
@@ -13,10 +17,15 @@ const pages = [
 ];
 
 function Header() {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const logout = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("userName");
+    dispatch(resetAuthState());
+    dispatch(clearVideos());
+    dispatch(change(""));
     navigate("/");
   };
 

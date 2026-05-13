@@ -37,11 +37,21 @@ const initialState = {
 const videoSlice = createSlice({
   name: "video",
   initialState,
+  reducers: {
+    clearVideos: (state) => {
+      state.videoMas = null;
+      state.error = null;
+      state.loading = false;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(getVideos.fulfilled, (state, action) => {
         state.videoMas = action.payload;
         state.loading = false;
+        if (state.videoMas.length === 0) {
+          state.error = "По запросу видео не найдены";
+        }
       })
       .addCase(getVideos.pending, (state) => {
         state.loading = true;
@@ -59,5 +69,6 @@ const videoSlice = createSlice({
   },
 });
 
+export const { clearVideos } = videoSlice.actions;
 export const { selectVideo, selectLoading, selectError } = videoSlice.selectors;
 export default videoSlice.reducer;

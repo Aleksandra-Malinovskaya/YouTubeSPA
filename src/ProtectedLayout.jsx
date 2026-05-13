@@ -1,13 +1,21 @@
-import { Navigate, Outlet } from "react-router";
+import { Outlet } from "react-router";
 import Header from "./search/Header";
 import { useNavigate } from "react-router";
+import { useDispatch } from "react-redux";
+import { loadFavorites } from "./RTK/favoriteSlice";
+import { useEffect } from "react";
 
 const ProtectedLayout = () => {
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
-  if (!token) {
-    navigate("/");
-  }
+  const dispatch = useDispatch();
+  useEffect(() => {
+    if (!token) {
+      navigate("/");
+    } else {
+      dispatch(loadFavorites());
+    }
+  }, [token, navigate, dispatch]);
 
   return (
     <>

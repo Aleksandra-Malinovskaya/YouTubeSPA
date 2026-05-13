@@ -30,6 +30,7 @@ const style = {
 const ModalWindow = ({ fav = null }) => {
   const isopen = useSelector(selectModal);
   const text = useSelector(selectValue);
+  const [queryText, setQueryText] = useState("");
   const [saveName, setSaveName] = useState("");
   const [sortBy, setSortBy] = useState("relevance");
   const [maxCount, setMaxCount] = useState(25);
@@ -37,32 +38,25 @@ const ModalWindow = ({ fav = null }) => {
 
   useEffect(() => {
     if (isopen) {
+      setQueryText(fav ? fav.text : text);
       setSaveName(fav ? fav.name : "");
       setSortBy(fav ? fav.sortBy : "relevance");
       setMaxCount(fav ? fav.maxCount : 25);
     }
-  }, [isopen, fav]);
+  }, [isopen, fav, text]);
 
   const handleSave = () => {
+    const payload = {
+      id: fav ? fav.id : crypto.randomUUID(),
+      text: queryText,
+      name: saveName,
+      sortBy: sortBy,
+      maxCount: maxCount,
+    };
     if (fav) {
-      dispatch(
-        edit({
-          id: fav.id,
-          name: saveName,
-          sortBy: sortBy,
-          maxCount: maxCount,
-        })
-      );
+      dispatch(edit(payload));
     } else {
-      dispatch(
-        add({
-          id: crypto.randomUUID(),
-          text: text,
-          name: saveName,
-          sortBy: sortBy,
-          maxCount: maxCount,
-        })
-      );
+      dispatch(add(payload));
     }
 
     setSaveName("");
@@ -90,7 +84,13 @@ const ModalWindow = ({ fav = null }) => {
           <Typography variant="body2" sx={{ mb: 0.5 }}>
             Запрос
           </Typography>
-          <TextField fullWidth size="small" value={text} disabled />
+          <TextField
+            fullWidth
+            size="small"
+            value={queryText}
+            onChange={(e) => setQueryText(e.target.value)}
+            disabled={!fav}
+          />
         </Box>
 
         <Box>
