@@ -1,8 +1,8 @@
 import { Routes, Route, Navigate } from "react-router";
 import AuthForm from "./auth/AuthForm";
 import ProtectedLayout from "./ProtectedLayout";
-import MainSearch from "./search/mainSearch";
 import FavoritePage from "./favorite/FavoritePage";
+import MainSearch from "./search/MainSearch";
 
 function App() {
   return (
