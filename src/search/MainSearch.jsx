@@ -70,10 +70,10 @@ const MainSearch = () => {
           <Grid container spacing={isResultsPage ? 3 : 0}>
             {videoMas.map((video) => (
               <Grid
+                key={video.id.videoId || video.id}
                 xs={12}
                 sm={6}
                 md={viewMode === "list" ? 12 : 3}
-                key={video.id.videoId}
               >
                 <VideoCard video={video} mode={viewMode} />
               </Grid>

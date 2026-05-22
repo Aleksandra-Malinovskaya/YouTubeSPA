@@ -7,8 +7,7 @@ import {
   Tooltip,
 } from "@mui/material";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
-import { useState } from "react";
-import { getVideos } from "../RTK/videoSlice";
+import { getVideos, getStatistics } from "../RTK/videoSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { change, selectValue } from "../RTK/inputSlice";
 import { openModal } from "../RTK/modalSlice";
@@ -17,6 +16,16 @@ import ModalWindow from "./ModalWindow";
 const Search = ({ isResultsPage }) => {
   const dispatch = useDispatch();
   const text = useSelector(selectValue);
+  const handleSearch = async () => {
+    const resultVideo = await dispatch(getVideos({ text: text }));
+
+    const videos = resultVideo.payload;
+
+    if (videos && videos.length > 0) {
+      const ids = videos.map((video) => video.id.videoId).join(",");
+      dispatch(getStatistics({ id: ids }));
+    }
+  };
 
   return (
     <Box
@@ -62,7 +71,7 @@ const Search = ({ isResultsPage }) => {
         />
         <Button
           variant="contained"
-          onClick={() => dispatch(getVideos({ text: text }))}
+          onClick={handleSearch}
           sx={{
             px: 4,
             borderRadius: "0 4px 4px 0",

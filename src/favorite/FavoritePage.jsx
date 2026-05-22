@@ -12,7 +12,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { removeFavorite, selectFavorites } from "../RTK/favoriteSlice";
-import { getVideos } from "../RTK/videoSlice";
+import { getVideos, getStatistics } from "../RTK/videoSlice";
 import { change } from "../RTK/inputSlice";
 import { openModal } from "../RTK/modalSlice";
 import ModalWindow from "../search/ModalWindow";
@@ -23,10 +23,10 @@ const FavoritePage = () => {
   const navigate = useNavigate();
   const [editingFav, setEditingFav] = useState(null);
 
-  const handleExecute = (fav) => {
+  const handleExecute = async (fav) => {
     dispatch(change(fav.text));
 
-    dispatch(
+    const resultVideo = await dispatch(
       getVideos({
         text: fav.text,
         result: fav.maxCount,
@@ -34,6 +34,12 @@ const FavoritePage = () => {
       })
     );
 
+    const videos = resultVideo.payload;
+
+    if (videos && videos.length > 0) {
+      const ids = videos.map((video) => video.id.videoId).join(",");
+      dispatch(getStatistics({ id: ids }));
+    }
     navigate("/search");
   };
 

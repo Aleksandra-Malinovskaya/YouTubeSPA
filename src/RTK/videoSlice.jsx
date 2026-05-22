@@ -28,6 +28,30 @@ export const getVideos = createAsyncThunk(
   }
 );
 
+export const getStatistics = createAsyncThunk(
+  "video/getStatistics",
+  async ({ id }, thunkAPI) => {
+    try {
+      const API_KEY = import.meta.env.VITE_YOUTUBE_API_KEY;
+      const response = await axios.get(
+        "https://www.googleapis.com/youtube/v3/videos",
+        {
+          params: {
+            part: "statistics, snippet",
+            id: id,
+            key: API_KEY,
+          },
+        }
+      );
+      return response.data.items;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.error?.message || "Произошла ошибка"
+      );
+    }
+  }
+);
+
 const initialState = {
   videoMas: null,
   loading: false,
@@ -60,6 +84,18 @@ const videoSlice = createSlice({
       .addCase(getVideos.rejected, (state, action) => {
         state.error = action.payload;
         state.loading = false;
+      })
+      .addCase(getStatistics.fulfilled, (state, action) => {
+        state.videoMas = action.payload;
+        state.loading = false;
+      })
+      .addCase(getStatistics.rejected, (state, action) => {
+        state.error = action.payload;
+        state.loading = false;
+      })
+      .addCase(getStatistics.pending, (state) => {
+        state.loading = true;
+        state.error = null;
       });
   },
   selectors: {
