@@ -8,14 +8,20 @@ import { useEffect } from "react";
 const ProtectedLayout = () => {
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
+  const userName = localStorage.getItem("userName");
   const dispatch = useDispatch();
   useEffect(() => {
     if (!token) {
       navigate("/");
     } else {
-      dispatch(loadFavorites());
+      const key = userName ? `favorites_${userName}` : null;
+      if (key) {
+        const savedData = localStorage.getItem(key);
+        const parsedData = savedData ? JSON.parse(savedData) : [];
+        dispatch(loadFavorites(parsedData));
+      }
     }
-  }, [token, navigate, dispatch]);
+  }, [token, navigate, dispatch, userName]);
 
   return (
     <>

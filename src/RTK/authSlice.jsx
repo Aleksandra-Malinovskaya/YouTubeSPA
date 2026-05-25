@@ -9,11 +9,8 @@ export const authRequest = createAsyncThunk(
   "reg/authRequest",
   async (data, thunkAPI) => {
     try {
-      const response = await axios.post(
-        "https://todo-redev.herokuapp.com/api/auth/login",
-        data,
-        config
-      );
+      const AUTH_LINK = import.meta.env.VITE_YOUTUBE_AUTH_LINK;
+      const response = await axios.post(AUTH_LINK, data, config);
       localStorage.setItem("token", response.data.token);
       localStorage.setItem("userName", data.email);
       return response.data;

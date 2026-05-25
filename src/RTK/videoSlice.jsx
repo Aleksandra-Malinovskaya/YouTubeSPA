@@ -1,24 +1,22 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
+const API_KEY = import.meta.env.VITE_YOUTUBE_API_KEY;
 
 export const getVideos = createAsyncThunk(
   "video/getVideos",
   async ({ text, result = 12, order = "relevance" }, thunkAPI) => {
     try {
-      const API_KEY = import.meta.env.VITE_YOUTUBE_API_KEY;
-      const response = await axios.get(
-        "https://www.googleapis.com/youtube/v3/search",
-        {
-          params: {
-            part: "snippet",
-            q: text,
-            maxResults: result,
-            type: "video",
-            order: order,
-            key: API_KEY,
-          },
-        }
-      );
+      const SEARCH_LINK = import.meta.env.VITE_YOUTUBE_SEARCH_LINK;
+      const response = await axios.get(SEARCH_LINK, {
+        params: {
+          part: "snippet",
+          q: text,
+          maxResults: result,
+          type: "video",
+          order: order,
+          key: API_KEY,
+        },
+      });
       return response.data.items;
     } catch (error) {
       return thunkAPI.rejectWithValue(
@@ -32,17 +30,14 @@ export const getStatistics = createAsyncThunk(
   "video/getStatistics",
   async ({ id }, thunkAPI) => {
     try {
-      const API_KEY = import.meta.env.VITE_YOUTUBE_API_KEY;
-      const response = await axios.get(
-        "https://www.googleapis.com/youtube/v3/videos",
-        {
-          params: {
-            part: "statistics, snippet",
-            id: id,
-            key: API_KEY,
-          },
-        }
-      );
+      const STATISTICS_LINK = import.meta.env.VITE_YOUTUBE_STATISTICS_LINK;
+      const response = await axios.get(STATISTICS_LINK, {
+        params: {
+          part: "statistics, snippet",
+          id: id,
+          key: API_KEY,
+        },
+      });
       return response.data.items;
     } catch (error) {
       return thunkAPI.rejectWithValue(
