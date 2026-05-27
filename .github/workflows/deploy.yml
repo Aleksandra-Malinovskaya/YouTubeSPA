@@ -21,6 +21,9 @@ jobs:
           npm run build
         env:
           VITE_YOUTUBE_API_KEY: ${{ secrets.VITE_YOUTUBE_API_KEY }}
+          VITE_YOUTUBE_AUTH_LINK: ${{ secrets.VITE_YOUTUBE_AUTH_LINK }}
+          VITE_YOUTUBE_SEARCH_LINK: ${{ secrets.VITE_YOUTUBE_SEARCH_LINK }}
+          VITE_YOUTUBE_STATISTICS_LINK: ${{ secrets.VITE_YOUTUBE_STATISTICS_LINK }}
 
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@v4
